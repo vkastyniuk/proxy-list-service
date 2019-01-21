@@ -23,9 +23,10 @@ class ProxyService(object):
         return cls._instance
 
     def get_proxies(self, **kwargs):
-        LOGGER.debug('Get proxy list by parameters.', json.dumps(kwargs))
+        LOGGER.debug('Get proxy list by parameters: %s', json.dumps(kwargs))
 
         query = self.db.session.query(Proxy)
+        query.order_by('%s %s' % (kwargs.get('order_by'), kwargs.get('order_dir')))
         query.limit(kwargs.get('limit'))
         query.offset(kwargs.get('offset'))
 

@@ -2,3 +2,4 @@ flask
 flask-restful
 Flask-Migrate
 Flask-SQLAlchemy
+psycopg2-binary

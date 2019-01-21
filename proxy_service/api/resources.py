@@ -14,6 +14,8 @@ class ProxiesResource(Resource):
     parser.add_argument('port_number', type=int, location='args')
     parser.add_argument('response_time', type=int, location='args')
     parser.add_argument('last_check', type=int, location='args')
+    parser.add_argument('order_by', type=str, location='args', default='response_time')
+    parser.add_argument('order_dir', type=str, location='args', default='desc')
     parser.add_argument('limit', type=int, location='args', default=50)
     parser.add_argument('offset', type=int, location='args', default=0)
 
