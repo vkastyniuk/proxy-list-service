@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from proxy_service import config
 from proxy_service.api import blueprint
 from proxy_service.api.models import db
+from proxy_service.api.schemas import ma
 
 __all__ = ('create_app',)
 
@@ -19,6 +20,7 @@ def create_app(config_obj=config):
 
     # setup extensions
     db.init_app(flask)
+    ma.init_app(flask)
 
     migrate = Migrate()
     migrate.init_app(flask, db)

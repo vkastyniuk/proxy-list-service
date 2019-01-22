@@ -13,5 +13,5 @@ class Proxy(db.Model):
     city = db.Column(db.String)
     response_time = db.Column(db.Integer, nullable=False)
     proxy_type = db.Column(db.String, nullable=False)
-    anonymity = db.Column(db.String, nullable=False)
+    anonymity = db.Column(db.String)
     last_check = db.Column(db.TIMESTAMP, nullable=False)

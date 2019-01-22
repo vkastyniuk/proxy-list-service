@@ -2,4 +2,5 @@ flask
 flask-restful
 Flask-Migrate
 Flask-SQLAlchemy
+Marshmallow-SQLAlchemy
 psycopg2-binary

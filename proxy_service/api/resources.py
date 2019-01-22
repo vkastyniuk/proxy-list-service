@@ -1,25 +1,31 @@
-from flask_restful import reqparse, Resource
+from flask import request
+from flask_restful import Resource
 
+from proxy_service.api.schemas import proxy_filter_schema, proxy_schema
 from proxy_service.services import ProxyService
 
 
 class ProxiesResource(Resource):
-    proxy_types = ('HTTP', 'HTTPS', 'SOCKS4', 'SOCKS5')
-    anonymity_levels = ('HTTP', 'HTTPS', 'SOCKS4', 'SOCKS5')
-
-    parser = reqparse.RequestParser()
-    parser.add_argument('proxy_type', type=str, location='args', case_sensitive=False, choices=proxy_types)
-    parser.add_argument('anonymity', type=str, location='args', case_sensitive=False, choices=anonymity_levels)
-    parser.add_argument('country_code', type=str, location='args')
-    parser.add_argument('port_number', type=int, location='args')
-    parser.add_argument('response_time', type=int, location='args')
-    parser.add_argument('last_check', type=int, location='args')
-    parser.add_argument('order_by', type=str, location='args', default='response_time')
-    parser.add_argument('order_dir', type=str, location='args', default='desc')
-    parser.add_argument('limit', type=int, location='args', default=50)
-    parser.add_argument('offset', type=int, location='args', default=0)
+    def __init__(self) -> None:
+        super().__init__()
+        self.service = ProxyService.get_instance()
 
     def get(self):
-        kwargs = self.parser.parse_args()
-        service = ProxyService.get_instance()
-        return service.get_proxies(**kwargs)
+        filters, errors = proxy_filter_schema.load(request.args)
+        if errors:
+            return errors, 400
+
+        proxies = self.service.get_proxies(**filters)
+        return proxy_schema.jsonify(proxies, many=True)
+
+    def post(self):
+        json_data = request.get_json(force=True)
+        if not json_data:
+            return {'message': 'No input data provided'}, 400
+
+        proxy, errors = proxy_schema.load(json_data)
+        if errors:
+            return errors, 400
+
+        proxy = self.service.add_proxy(proxy)
+        return proxy_schema.jsonify(proxy)
