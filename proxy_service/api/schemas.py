@@ -18,7 +18,7 @@ class UnixTimestamp(fields.DateTime):
             return None
 
         try:
-            return value.timestamp()
+            return int(round(value.timestamp()))
         except (AttributeError, ValueError):
             self.fail('format', input=value)
 
