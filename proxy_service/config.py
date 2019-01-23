@@ -1,5 +1,7 @@
 import os
 
+LAST_CHECK_THRESHOLD = 1
+
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s?sslmode=%(sslmode)s&sslrootcert=%(sslrootcert)s' % {

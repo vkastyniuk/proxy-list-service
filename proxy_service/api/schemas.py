@@ -32,6 +32,16 @@ class UnixTimestamp(fields.DateTime):
             raise self.fail('invalid')
 
 
+class OneOfIgnoreCase(validate.OneOf):
+
+    def __init__(self, choices, labels=None, error=None):
+        choices = [choice.lower() for choice in choices]
+        super().__init__(choices, labels, error)
+
+    def __call__(self, value):
+        return super().__call__(value.lower())
+
+
 class ProxySchema(ma.ModelSchema):
     class Meta:
         model = Proxy
@@ -39,19 +49,20 @@ class ProxySchema(ma.ModelSchema):
     proxy_type = fields.String(required=True, validate=validate.OneOf(proxy_types))
     last_check = UnixTimestamp()
     anonymity = fields.String(validate=validate.OneOf(anonymity_levels))
+    country_code = fields.String(validate=validate.Length(min=2, max=2))
 
 
 class ProxyFilterSchema(ma.Schema):
     port_number = fields.Integer()
-    proxy_type = fields.String(validate=validate.OneOf(proxy_types))
+    proxy_type = fields.String(validate=OneOfIgnoreCase(proxy_types))
     response_time = fields.Integer()
     last_check = UnixTimestamp()
-    anonymity = fields.String(validate=validate.OneOf(anonymity_levels))
-    country_code = fields.String()
+    anonymity = fields.String(validate=OneOfIgnoreCase(anonymity_levels))
+    country_code = fields.String(validate=validate.Length(min=2, max=2))
 
-    order_by = fields.String(missing='response_time')
-    order_dir = fields.String(missing='desc')
-    limit = fields.Integer(missing=50)
+    order_by = fields.String()
+    order_dir = fields.String()
+    limit = fields.Integer(missing=50, validate=validate.Range(max=1000))
     offset = fields.Integer(missing=0)
 
 

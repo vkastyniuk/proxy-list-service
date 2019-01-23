@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 6b932d46c4dc
+Revision ID: 94e98a3db4de
 Revises: 
-Create Date: 2019-01-21 11:14:43.030252
+Create Date: 2019-01-23 15:56:38.854703
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6b932d46c4dc'
+revision = '94e98a3db4de'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,14 +21,14 @@ def upgrade():
     op.create_table('proxies',
     sa.Column('ip_address', sa.String(), nullable=False),
     sa.Column('port_number', sa.Integer(), nullable=False),
+    sa.Column('proxy_type', sa.String(), nullable=False),
     sa.Column('country_code', sa.String(), nullable=True),
     sa.Column('country', sa.String(), nullable=True),
     sa.Column('city', sa.String(), nullable=True),
     sa.Column('response_time', sa.Integer(), nullable=False),
-    sa.Column('proxy_type', sa.String(), nullable=False),
-    sa.Column('anonymity', sa.String(), nullable=False),
+    sa.Column('anonymity', sa.String(), nullable=True),
     sa.Column('last_check', sa.TIMESTAMP(), nullable=False),
-    sa.PrimaryKeyConstraint('ip_address', 'port_number')
+    sa.PrimaryKeyConstraint('ip_address', 'port_number', 'proxy_type')
     )
     # ### end Alembic commands ###
 
